@@ -9,11 +9,15 @@ const currentIp = getCurrentIp();
 const currentTime = getCurrentTime();
 
 const app = express();
+
+app.use((req, _, next) => {
+  console.log(`\x1b[33m--- ${req.method} ---\x1b[0m`);
+  next();
+});
+
 app.use(express.static('public'));
 
 app.get('/api/whoami', (req, res) => {
-  // console.log('\x1b[33m', '--- GET ---', '\x1b[0m');
-
   res.set({
     'Access-Control-Allow-Origin': '*'
   });
@@ -29,10 +33,11 @@ app.get('/api/whoami', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  console.log('\x1b[33m', '--- GET ---', '\x1b[0m');
   res.sendStatus(404);
 });
 
 app.listen(PORT, () =>
-  console.log(`[${currentTime}] express is running at ${currentIp}:${PORT}`)
+  console.log(
+    `[${currentTime}] express is running at http://${currentIp}:${PORT}`
+  )
 );
