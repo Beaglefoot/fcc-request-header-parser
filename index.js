@@ -23,7 +23,9 @@ app.get('/api/whoami', (req, res) => {
   });
 
   const { ip, headers } = req;
-  const cleanedIp = ip.replace(/^.*?((?:\d{1,3}\.){3}\d{1,3}).*$/, '$1');
+  const cleanedIp = (req.headers['x-forwarded-for'] || ip)
+    .split(',')[0]
+    .replace(/^.*?((?:\d{1,3}\.){3}\d{1,3}).*$/, '$1');
   const lang = (headers['accept-language'] || 'unknown').split(',')[0];
   const os = (
     [].concat(headers['user-agent'].match(/\(.+?\)/g))[0] || '(unknown)'
